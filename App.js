@@ -23,9 +23,9 @@ const App = () => {
       const position = left-width/2+100;
       console.log("Posição atual do círculo:", position);
 
-      axios.post('http://192.168.4.1/post', { plain: position.toString() }).then(response => {
+      axios.post('http://192.168.4.1/post', { value: position }).then(response => {
         console.log(response.data);
-          })
+      })
         };
 
     const panResponder = useRef(
