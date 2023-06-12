@@ -1,61 +1,38 @@
-import React, { useRef } from 'react';
-import { View, StyleSheet, PanResponder, Dimensions } from 'react-native';
-
-const { width, height } = Dimensions.get('window');
+import React, { useEffect } from 'react';
+import { View, Text } from 'react-native';
 
 const App = () => {
+  useEffect(() => {
+    const ws = new WebSocket('ws://192.168.1.8:80');
 
-  const circleRef = useRef(null);
+    ws.onopen = () => {
+      console.log('Conexão WebSocket aberta');
+      ws.send('Olá, servidor!');
+    };
 
-  const onPanResponderMove = (evt, gestureState) => {
-    let moveX = gestureState.moveX;
-    let moveY = gestureState.moveY;
+    ws.onmessage = (event) => {
+      console.log('Mensagem recebida:', event.data);
+    };
 
-    // Verifica se o círculo está dentro da área desejada
-    if (moveX > -100 && moveX < width - 100) {
-      // Define o limite de movimentação do círculo para a direita
-      moveX = Math.min(moveX, width - 100);
-    } else {
-      // Define o limite de movimentação do círculo para baixo
-      moveY = Math.max(moveY, 0);
-    }
+    ws.onerror = (error) => {
+      console.log('Erro WebSocket:', error);
+    };
 
-    circleRef.current.setNativeProps({
-      style: {
-        left: moveX - 50,
-        top: moveY - 50,
-      }
-    });
-  };
+    ws.onclose = () => {
+      console.log('Conexão WebSocket fechada');
+    };
 
-  const panResponder = PanResponder.create({
-    onMoveShouldSetPanResponderCapture: () => true,
-    onPanResponderMove: onPanResponderMove,
-    onPanResponderGrant: (evt, gestureState) => {
-      circleRef.current.setNativeProps({
-        style: {
-          left: gestureState.x0 - 50,
-          top: gestureState.y0 - 50,
-        }
-      });
-    }
-  });
+    return () => {
+      // Feche a conexão WebSocket ao desmontar o componente
+      ws.close();
+    };
+  }, []);
 
   return (
-    <View style={styles.container} {...panResponder.panHandlers} ref={circleRef} />
+    <View>
+      <Text>Exemplo de WebSocket com Expo</Text>
+    </View>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: 'cyan',
-    position: 'absolute',
-    left: (width / 2) - 25,
-    top: (height / 2) - 25,
-  }
-});
+};
 
 export default App;

@@ -10,13 +10,12 @@
   },
   "dependencies": {
     "@expo/webpack-config": "^18.0.1",
-    "axios": "^1.4.0",
-    "expo": "~48.0.15",
+    "chokidar": "^3.5.3",
+    "expo": "^48.0.15",
     "expo-status-bar": "~1.4.4",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
     "react-native": "0.71.8",
-    "react-native-ble-plx": "^2.0.3",
     "react-native-linear-gradient": "^2.6.2",
     "react-native-web": "~0.18.11"
   },
